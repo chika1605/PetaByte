@@ -1,65 +1,74 @@
-# Open Platform Demo
+# Axelor Demo Project - PetaByte
 
-Open Platform Demo is a simple application showing [Axelor Open Platform](https://github.com/axelor/axelor-open-platform) features.
+Добро пожаловать в демо-проект на базе **Axelor Open Platform**. Этот проект включает в себя кастомный модуль управления задачами (`demo-task`) с собственными представлениями, моделями и бизнес-логикой.
 
-## Installation
+Этот проект работает на Java (Open Platform) и использует базу данных PostgreSQL.
 
-Make sure you have JDK 21 and Git installed.
+---
 
-Clone the latest sources:
+## 🚀 Как запустить проект локально
 
-```bash
-$ git clone git@github.com:axelor/open-platform-demo.git
-```
+Запуск приложения состоит из **двух простых шагов**: поднятие базы данных в Docker и старт самого приложения через Gradle.
 
-and build the project:
+### Шаг 1: Запуск базы данных (PostgreSQL)
 
-```bash
-$ cd /path/to/open-platform-demo
-$ ./gradlew -x test build
-```
+База данных работает в Docker-контейнере. Это изолирует её от вашей системы и избавляет от необходимости устанавливать PostgreSQL вручную. В `axelor-config` порт базы изменён на `5433`, чтобы избежать конфликтов.
 
-This should generate the war package for under build/libs directory. You can test the war by deploying on your tomcat server.
+1. Убедитесь, что у вас установлен и запущен [Docker Desktop](https://www.docker.com/products/docker-desktop).
+2. Откройте терминал в корневой папке проекта (`PetaByte`).
+3. Запустите контейнер в фоновом режиме:
+   ```bash
+   docker-compose up -d
+   ```
+*(Флаг `-d` означает "detached", контейнер продолжит работать в фоне).*
 
-You can also test the application using the embedded tomcat server. First edit the `axelor-config.properties` and configure the database to use and then run the following command from the interactive shell.
+### Шаг 2: Запуск приложения Axelor
 
-```bash
-$ ./gradlew --no-daemon run
-```
+Для компиляции и старта приложения используется встроенный скрипт `gradlew` (на Windows) или `./gradlew` (на Mac/Linux).
 
-The application should start printing some logs in your terminal window. After few seconds, you should see something like this:
-```bash
-...
-Ready to serve...
+1. В том же терминале выполните команду для очистки кэша и запуска:
+   ```ps1
+   .\gradlew clean run
+   ```
+   *(Или просто `.\gradlew run`, если вы уже собирали проект ранее).*
 
-Running at http://localhost:8080/open-platform-demo
-```
+2. Дождитесь появления в консоли сообщения об успешном старте Tomcat-сервера (в конце логов будет написано `Tomcat started on port(s): 8080`).
 
-Launch the browser and open the application url as printed on terminal. Use the default **admin/admin** as the user name and password. You should be in the application.
+---
 
-## Eclipse
+## 🌐 Как открыть приложение
 
-The application project can be imported in Eclipse IDE. In order to import the project, you first have two options:
+Как только процесс сборки завершится и поднимется локальный сервер, откройте ваш браузер и перейдите по следующему адресу:
 
-1. Using buildship 2.1 plugin
+👉 **[http://localhost:8080/](http://localhost:8080/)**
 
-    ```bash
-    $ ./gradlew classes copyWebapp
-    ```
+Вам откроется форма входа. По умолчанию в Axelor (если вы используете демо-настройки) логин и пароль обычно:
+- **Username:** `admin`
+- **Password:** `admin` 
+*(либо настройки, предусмотренные в ваших файлах конфигурации)*
 
-    This will make sure all the required classes are generated and resource required for web ui are copied.
+---
 
-    From eclipse, import the project using `File -> Import... -> Gradle -> Existing Gradle Project` menu.
+## 🛠️ Структура модулей
 
-2. Generate eclipse project files like this:
+В папке `modules` вы найдете кастомные модули приложения:
+* **`demo-task`** — главный учебный модуль. В нем мы реализовали:
+  * Сущность `Task` (Название, Приоритет, Дедлайн).
+  * Табличное (`Task.xml`) и Форменное представление.
+  * Бизнес-логику (автоматическое проставление статуса `Overdue` при просроченном дедлайне) в `TaskController.java`.
+  * Цветовую индикацию строк таблицы и быстрые фильтры "Мои задачи", "Завершенные задачи" и др.
 
-    ```bash
-    $ cd /path/to/open-platform-demo
-    $ ./gradlew classes copyWebapp cleanEclipse eclipse
-    ```
+---
 
-    This will generate eclipse project files for the application project and all it’s submodules.
+## 💡 Полезные команды
 
-    From the eclipse, import the projects using `File -> Import... -> General -> Existing Projects into Workspace` menu. In the import project wizard check the Search for nested projects so that all the submodules are also imported.
-
-You can also run the application inside eclipse using eclipse WTP tools. Create a tomcat8.5 server add the open-platform-demo module and run the server.
+* **Остановить базу данных:** 
+  ```bash
+  docker-compose down
+  ```
+* **Посмотреть логи базы данных:** 
+  ```bash
+  docker logs axelor-demo-postgres
+  ```
+* **Остановить приложение:**
+  В терминале, где работает Gradle, нажмите `Ctrl + C` и подтвердите завершение.

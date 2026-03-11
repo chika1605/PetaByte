@@ -7,23 +7,24 @@ import java.time.LocalDate;
 
 public class TaskController {
 
+  private static final String STATUS_DONE = "Done";
+  private static final String STATUS_OVERDUE = "Overdue";
+
   public void checkOverdue(ActionRequest request, ActionResponse response) {
     Task task = request.getContext().asType(Task.class);
+    
+    if (task.getDueDate() == null || task.getStatus() == null || STATUS_DONE.equals(task.getStatus())) {
+      return;
+    }
 
-    if (task.getDueDate() != null && task.getStatus() != null) {
-      LocalDate today = LocalDate.now();
+    LocalDate today = LocalDate.now();
+    LocalDate dueDate = task.getDueDate();
 
-      // Auto-set status to Overdue if past due and not Done
-      if (task.getDueDate().isBefore(today) && !"Done".equals(task.getStatus())) {
-        response.setValue("status", "Overdue");
-      }
-
-      // Notify if due within the next 24 hours and not yet Done
-      if (!today.isAfter(task.getDueDate())
-          && task.getDueDate().isBefore(today.plusDays(1))
-          && !"Done".equals(task.getStatus())) {
-        response.setNotify("⚠️ Срок задачи истекает менее чем через 1 день!");
-      }
+    if (dueDate.isBefore(today)) {
+      response.setValue("status", STATUS_OVERDUE);
+    } 
+    else if (dueDate.isEqual(today) || dueDate.isEqual(today.plusDays(1))) {
+      response.setNotify("\u26A0\uFE0F Срок задачи истекает менее чем через 1 день!");
     }
   }
 }
