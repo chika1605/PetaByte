@@ -37,22 +37,22 @@
       <field name="assignedTo" colSpan="6"/>
       <field name="priority" colSpan="6" widget="RadioSelect"/>
       <field name="dueDate" colSpan="6" onChange="action-task-check-overdue"/>
-      <field name="status" colSpan="6" readonly="true"/>
-      <field name="estimatedHours" colSpan="6"/>
+      <field name="status" colSpan="6" readonly="true" default="New"/>
+      <field name="estimatedHours" colSpan="6" min="0"/>
     </panel>
-    <panel sidebar="true">
-      <button name="startTask" title="Start Task" onClick="action-task-start" showIf="status == 'New'" css="btn-primary"/>
-      <button name="completeTask" title="Complete Task" onClick="action-task-complete" showIf="status == 'In Progress'" css="btn-success"/>
+    <panel>
+      <button name="startTask" title="Start Task" onClick="action-task-start,save" showIf="status == 'New'" css="btn-primary" colSpan="2"/>
+      <button name="completeTask" title="Complete Task" onClick="action-task-complete,save" showIf="status == 'In Progress'" css="btn-success" colSpan="2"/>
     </panel>
   </form>
 
-  <action-record name="action-task-start" model="com.axelor.task.db.Task">
-    <field name="status" expr="eval: 'In Progress'"/>
-  </action-record>
+  <action-attrs name="action-task-start">
+    <attribute name="value:set" expr="In Progress" for="status"/>
+  </action-attrs>
 
-  <action-record name="action-task-complete" model="com.axelor.task.db.Task">
-    <field name="status" expr="eval: 'Done'"/>
-  </action-record>
+  <action-attrs name="action-task-complete">
+    <attribute name="value:set" expr="Done" for="status"/>
+  </action-attrs>
 
   <action-method name="action-task-check-overdue">
     <call class="com.axelor.task.web.TaskController" method="checkOverdue"/>

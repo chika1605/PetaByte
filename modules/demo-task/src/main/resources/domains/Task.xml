@@ -12,7 +12,7 @@
     <string name="priority" selection="task.priority.selection" required="true" default="Medium"/>
     <date name="dueDate"/>
     <string name="status" selection="task.status.selection" required="true" default="New"/>
-    <decimal name="estimatedHours" precision="10" scale="2"/>
+    <decimal name="estimatedHours" precision="10" scale="2" min="0"/>
   </entity>
 
 </domain-models>
