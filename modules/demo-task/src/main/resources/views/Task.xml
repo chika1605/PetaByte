@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.1.xsd">
+
+  <selection name="task.priority.selection">
+    <option value="Low">Low</option>
+    <option value="Medium">Medium</option>
+    <option value="High">High</option>
+  </selection>
+
+  <selection name="task.status.selection">
+    <option value="New">New</option>
+    <option value="In Progress">In Progress</option>
+    <option value="Done">Done</option>
+    <option value="Overdue">Overdue</option>
+  </selection>
+
+  <grid name="task-grid" title="Tasks" model="com.axelor.task.db.Task" orderBy="-priority,dueDate">
+    <hilite background="danger" if="priority == 'High'"/>
+    <hilite background="warning" if="priority == 'Medium'"/>
+    <hilite background="success" if="priority == 'Low'"/>
+    <field name="title"/>
+    <field name="assignedTo"/>
+    <field name="priority"/>
+    <field name="dueDate"/>
+    <field name="status"/>
+    <field name="estimatedHours"/>
+  </grid>
+
+  <form name="task-form" title="Task" model="com.axelor.task.db.Task"
+    onLoad="action-task-check-overdue"
+    onSave="action-task-check-overdue">
+    <panel title="Task Details">
+      <field name="title" colSpan="12"/>
+      <field name="description" colSpan="12" widget="html"/>
+      <field name="assignedTo" colSpan="6"/>
+      <field name="priority" colSpan="6" widget="RadioSelect"/>
+      <field name="dueDate" colSpan="6" onChange="action-task-check-overdue"/>
+      <field name="status" colSpan="6" readonly="true"/>
+      <field name="estimatedHours" colSpan="6"/>
+    </panel>
+    <panel sidebar="true">
+      <button name="startTask" title="Start Task" onClick="action-task-start" showIf="status == 'New'" css="btn-primary"/>
+      <button name="completeTask" title="Complete Task" onClick="action-task-complete" showIf="status == 'In Progress'" css="btn-success"/>
+    </panel>
+  </form>
+
+  <action-record name="action-task-start" model="com.axelor.task.db.Task">
+    <field name="status" expr="eval: 'In Progress'"/>
+  </action-record>
+
+  <action-record name="action-task-complete" model="com.axelor.task.db.Task">
+    <field name="status" expr="eval: 'Done'"/>
+  </action-record>
+
+  <action-method name="action-task-check-overdue">
+    <call class="com.axelor.task.web.TaskController" method="checkOverdue"/>
+  </action-method>
+
+
+</object-views>

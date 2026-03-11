@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.1.xsd">
+
+  <module name="task" package="com.axelor.task.db"/>
+
+  <entity name="Task">
+    <string name="title" required="true" namecolumn="true"/>
+    <string name="description" large="true"/>
+    <string name="assignedTo"/>
+    <string name="priority" selection="task.priority.selection" required="true" default="Medium"/>
+    <date name="dueDate"/>
+    <string name="status" selection="task.status.selection" required="true" default="New"/>
+    <decimal name="estimatedHours" precision="10" scale="2"/>
+  </entity>
+
+</domain-models>

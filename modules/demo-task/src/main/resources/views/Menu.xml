@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.1.xsd">
+
+  <menuitem name="menu-task-root" order="10" title="Task Management" icon="check_circle" icon-background="blue"/>
+
+  <menuitem name="menu-task-all" parent="menu-task-root"
+    title="All Tasks"
+    action="task.all" tag-count="true"/>
+
+  <action-view name="task.all" title="All Tasks" model="com.axelor.task.db.Task">
+    <view type="grid" name="task-grid"/>
+    <view type="form" name="task-form"/>
+  </action-view>
+
+  <menuitem name="menu-task-my" parent="menu-task-root"
+    title="My Tasks"
+    action="task.my" tag-count="true"/>
+
+  <action-view name="task.my" title="My Tasks" model="com.axelor.task.db.Task">
+    <view type="grid" name="task-grid"/>
+    <view type="form" name="task-form"/>
+    <domain>self.assignedTo = :_user</domain>
+    <context name="_user" expr="eval: __user__.code"/>
+  </action-view>
+
+  <menuitem name="menu-task-overdue" parent="menu-task-root"
+    title="Overdue Tasks"
+    action="task.overdue" tag-count="true"/>
+
+  <action-view name="task.overdue" title="Overdue Tasks" model="com.axelor.task.db.Task">
+    <view type="grid" name="task-grid"/>
+    <view type="form" name="task-form"/>
+    <domain>self.status = 'Overdue' OR (self.dueDate &lt; :_today AND self.status != 'Done')</domain>
+    <context name="_today" expr="eval: __config__.date"/>
+  </action-view>
+
+  <menuitem name="menu-task-completed" parent="menu-task-root"
+    title="Completed Tasks"
+    action="task.completed" tag-count="true"/>
+
+  <action-view name="task.completed" title="Completed Tasks" model="com.axelor.task.db.Task">
+    <view type="grid" name="task-grid"/>
+    <view type="form" name="task-form"/>
+    <domain>self.status = 'Done'</domain>
+  </action-view>
+
+</object-views>

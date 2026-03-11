@@ -40,6 +40,13 @@ dependencies {
   implementation project(':modules:demo-sale')
   implementation project(':modules:demo-project')
   implementation project(':modules:demo-custom')
+  implementation project(':modules:demo-data')
+  implementation project(':modules:demo-task')
+  
+  // Database drivers
+  // NOTE: This demo's Axelor dialect resolver rejects H2 versions (2.0/2.1/2.2),
+  // so we use PostgreSQL for local development.
+  runtimeOnly 'org.postgresql:postgresql'
 }
 
 war {

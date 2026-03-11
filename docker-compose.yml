@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: axelor-demo-postgres
+    environment:
+      POSTGRES_DB: open_platform_demo_dev
+      POSTGRES_USER: axelor
+      POSTGRES_PASSWORD: axelor
+    ports:
+      - "5432:5432"
+    volumes:
+      - axelor_demo_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U axelor -d open_platform_demo_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  axelor_demo_pg:
